@@ -1,21 +1,10 @@
-console.log('Hi there!')
-
 const BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1'
+
+const artcollection = []
 
 window.addEventListener('DOMContentLoaded', () => {
     getInitialIDs()
 
-    // Get 80(?) random id's from:
-        // 80 requests per second limit
-        //  /v1/objects
-    // Calls:
-        //  v1/objects/189381
-        // for each id to see if obj has a gallery, if yes then temp stores data in an arr
-        // waits until 6 in arr and returns arr
-
-    //console.log(onViews)
-
-    
     // cardBuilder()
         // Builds card with basic info
             // Small Img + Name + other?
@@ -36,33 +25,79 @@ window.addEventListener('DOMContentLoaded', () => {
 })
 
 function getInitialIDs(){
-    fetch(BASE_URL + '/search?isHighlight=true&isOnView=true|q=*')
+    fetch(BASE_URL + '/search?isHighlight=true&isOnView=true|q=a')
         .then(function (resp){
             return resp.json()
         })
         .then (data => {
             const idList = Object.values(data.objectIDs)
-            idShuffler(idList)
+            //idShuffler(idList)
             makeSixCards(idList)
+        }).catch(function(error) {
+            console.log(error);
         })
 }
 
-function idShuffler(idList) {
-    for (let i = idList.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [idList[i], idList[j]] = [idList[j], idList[i]];
-    }
-}
-
 function makeSixCards(idList){
-    for (let i = 0; i < 6; i++){
+    for (let i = 0; i < 20; i++){
         //console.log(idList[i])
-        fetch(BASE_URL + `/objects/${idList[i]}`)
+        let randIndex = Math.floor(Math.random() * (idList.length))
+        fetch(BASE_URL + `/objects/${idList[randIndex]}`)
         .then(function (resp){
             return resp.json()
         })
         .then (data => {
-            console.log(data)
+            if(data['primaryImageSmall'] != ""){
+                cardMaker(data)
+            }
         })
     }
 }
+
+
+function cardMaker(data) {
+    const artDiv = document.getElementById('artcollection')
+    const newCard = document.createElement('div')
+    newCard.className = ('card')
+
+    const newH2 = document.createElement('h2')
+    if(data['title'].length > 20){
+        newH2.innerText = `${data['title'].slice(0,20)}...`
+    } else {
+        newH2.innerText = `${data['title']}`
+    }
+    
+    const newImg = document.createElement('img')
+    newImg.src = `${data['primaryImageSmall']}`
+    newImg.className = "artImgSmall"
+
+    // const newP = document.createElement('p')
+    // newP.id = `${data['title']}likes`
+    // newP.innerText = '0 Likes'
+
+    const newLikeBtn = document.createElement('button')
+    newLikeBtn.className = "like-btn"
+    newLikeBtn.id = `${data['title']}`
+    newLikeBtn.innerText = '✔️'
+    newLikeBtn.addEventListener('click', (e) => liker(e))
+    
+    const newDislikeBtn = document.createElement('button')
+    newDislikeBtn.className = "dislike-btn"
+    newDislikeBtn.id = `${data['title']}dislike`
+    newDislikeBtn.innerText = '❌'
+    newDislikeBtn.addEventListener('click', (e) => liker(e))
+
+    newCard.append(newH2, newImg, newLikeBtn, newDislikeBtn)
+    
+
+    artDiv.appendChild(newCard)
+}
+
+function liker(event){
+    event.preventDefault()
+    const likeText = document.getElementById(`${event.target.id}likes`)
+    const splitInner = likeText.innerText.split(" ")
+    let totalLikes = parseInt(splitInner[0])
+    splitInner[0] = (totalLikes += 1)
+    likeText.innerText = splitInner.join(" ")
+  }

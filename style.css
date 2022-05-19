@@ -1,0 +1,80 @@
+body {
+    margin: 0;
+    font-family:monospace;
+    background-color: #e4e4e4;
+  }
+  
+  #header {
+    display: flex;
+    justify-content: center;
+    background: #515DA2;
+    opacity: .8;
+    height: 7rem;
+    padding: 1rem;
+  }
+  
+  #header img {
+    height: 6rem;
+    width: auto;
+  }
+  
+  #artcollection {
+    margin: 1rem;
+  }
+  
+  .card {
+    text-align: center;
+    border: grey solid 1px;
+    width: 17rem;
+    height: 20rem;
+    display: inline-grid;
+    margin: 1rem 1rem;
+    box-shadow: 4px 4px #746f6f
+  }
+  
+  .artImgSmall {
+    justify-self: center;
+    max-height: 10rem;
+    max-width: 13rem;
+  }
+  
+  .like-btn {
+    position: relative;
+    background-color: #cbf2c3;
+    border: none;
+    border-radius: 5px;
+    height: 3rem;
+    width: max-content;
+    color: whitesmoke;
+    font-size: 18px;
+    justify-self: center;
+  }
+  
+  .like-btn:hover {
+    background-color: whitesmoke;
+  }
+
+  .dislike-btn {
+    position: relative;
+    background-color: #f2c3c5;
+    border: none;
+    border-radius: 5px;
+    height: 3rem;
+    width: max-content;
+    color: whitesmoke;
+    font-size: 18px;
+    justify-self: center;
+  }
+  
+  .dislike-btn:hover {
+    background-color: whitesmoke;
+  }
+  
+  .container {
+    padding: 1rem;
+    width: stretch;
+    height: auto;
+    display: none;
+    background: #515DA2;
+    opacity: .8;
+  }
