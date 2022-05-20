@@ -3,7 +3,7 @@ body {
     font-family:monospace;
     background-color: #e4e4e4;
   }
-  
+
   #header {
     display: flex;
     justify-content: center;
@@ -11,21 +11,37 @@ body {
     opacity: .8;
     height: 7rem;
     padding: 1rem;
-  }
-  
+  } 
+
   #header img {
     height: 6rem;
     width: auto;
+  }  
+
+  #mainBody{
+    position: relative;
+    display: flex;
+    width: 100%;
   }
-  
-  #artcollection {
-    margin: 1rem;
+
+  #artCollection {
+    margin: 0;
+    width: 60%;
+    float:left;
+    border: grey solid 1px;
+  }
+
+  #leftSidebar {
+    margin: 0;
+    width: 40%;
+    border: grey solid 1px;
+    background: #e4002b;
   }
   
   .card {
     text-align: center;
     border: grey solid 1px;
-    width: 17rem;
+    width: 16rem;
     height: 20rem;
     display: inline-grid;
     margin: 1rem 1rem;
@@ -38,6 +54,11 @@ body {
     max-width: 13rem;
   }
   
+  .bttns{
+    width: 50%;
+    justify-self: center;
+  }
+
   .like-btn {
     position: relative;
     background-color: #cbf2c3;
@@ -45,9 +66,8 @@ body {
     border-radius: 5px;
     height: 3rem;
     width: max-content;
-    color: whitesmoke;
     font-size: 18px;
-    justify-self: center;
+    justify-self: auto;
   }
   
   .like-btn:hover {
@@ -61,9 +81,9 @@ body {
     border-radius: 5px;
     height: 3rem;
     width: max-content;
-    color: whitesmoke;
+    
     font-size: 18px;
-    justify-self: center;
+    justify-self: auto;
   }
   
   .dislike-btn:hover {
@@ -77,4 +97,10 @@ body {
     display: none;
     background: #515DA2;
     opacity: .8;
+  }
+
+  p{
+      padding: 2rem;
+      font-size: 18px;
+      color: #fff;
   }

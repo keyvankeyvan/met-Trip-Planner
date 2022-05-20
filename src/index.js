@@ -1,6 +1,6 @@
 const BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1'
 
-const artcollection = []
+const artCollection = []
 
 window.addEventListener('DOMContentLoaded', () => {
     getInitialIDs()
@@ -31,14 +31,13 @@ function getInitialIDs(){
         })
         .then (data => {
             const idList = Object.values(data.objectIDs)
-            //idShuffler(idList)
-            makeSixCards(idList)
+            makeCards(idList)
         }).catch(function(error) {
             console.log(error);
         })
 }
 
-function makeSixCards(idList){
+function makeCards(idList){
     for (let i = 0; i < 20; i++){
         //console.log(idList[i])
         let randIndex = Math.floor(Math.random() * (idList.length))
@@ -47,7 +46,7 @@ function makeSixCards(idList){
             return resp.json()
         })
         .then (data => {
-            if(data['primaryImageSmall'] != ""){
+            if(data['primaryImageSmall'] != "" && data['GalleryNumber'] != ""){
                 cardMaker(data)
             }
         })
@@ -56,7 +55,9 @@ function makeSixCards(idList){
 
 
 function cardMaker(data) {
-    const artDiv = document.getElementById('artcollection')
+    artCollection.push(data)
+
+    const artDiv = document.getElementById('artCollection')
     const newCard = document.createElement('div')
     newCard.className = ('card')
 
@@ -70,14 +71,14 @@ function cardMaker(data) {
     const newImg = document.createElement('img')
     newImg.src = `${data['primaryImageSmall']}`
     newImg.className = "artImgSmall"
+    newImg.addEventListener('click', (e) => dispMoreInfo(data['objectID']))
 
-    // const newP = document.createElement('p')
-    // newP.id = `${data['title']}likes`
-    // newP.innerText = '0 Likes'
+    const newBtnDiv = document.createElement('div')
+    newBtnDiv.className = "bttns"
 
     const newLikeBtn = document.createElement('button')
     newLikeBtn.className = "like-btn"
-    newLikeBtn.id = `${data['title']}`
+    newLikeBtn.id = `${data['objectID']}`
     newLikeBtn.innerText = '✔️'
     newLikeBtn.addEventListener('click', (e) => liker(e))
     
@@ -85,19 +86,46 @@ function cardMaker(data) {
     newDislikeBtn.className = "dislike-btn"
     newDislikeBtn.id = `${data['title']}dislike`
     newDislikeBtn.innerText = '❌'
-    newDislikeBtn.addEventListener('click', (e) => liker(e))
+    newDislikeBtn.addEventListener('click', (e) => disliker(e))
 
-    newCard.append(newH2, newImg, newLikeBtn, newDislikeBtn)
+    newBtnDiv.append(newLikeBtn, newDislikeBtn)
+    newCard.append(newH2, newImg, newBtnDiv)
     
-
     artDiv.appendChild(newCard)
 }
 
 function liker(event){
     event.preventDefault()
-    const likeText = document.getElementById(`${event.target.id}likes`)
-    const splitInner = likeText.innerText.split(" ")
-    let totalLikes = parseInt(splitInner[0])
-    splitInner[0] = (totalLikes += 1)
-    likeText.innerText = splitInner.join(" ")
-  }
+
+    const artid = event.target.id
+
+    for (const art in artCollection) {
+        if (artCollection[art]['objectID'] == artid) {
+            console.log(artCollection[art]['title'])
+            console.log(artCollection[art]['department'])
+            console.log(artCollection[art]['GalleryNumber'])
+            console.log(artCollection[art]['primaryImage'])
+            console.log(artCollection[art]['artistDisplayName'])
+            console.log(artCollection[art]['dimensions'])
+            console.log(artCollection[art]['objectDate'])
+        }
+    }
+}
+
+function dispMoreInfo(artid){
+    for (const art in artCollection) {
+        if (artCollection[art]['objectID'] == artid) {
+            console.log(artCollection[art]['title'])
+            console.log(artCollection[art]['department'])
+            console.log(artCollection[art]['GalleryNumber'])
+            console.log(artCollection[art]['primaryImage'])
+            console.log(artCollection[art]['artistDisplayName'])
+            console.log(artCollection[art]['dimensions'])
+            console.log(artCollection[art]['objectDate'])
+        }
+    }
+}
+
+function disliker(event){
+    console.log('we got here!!')
+}
