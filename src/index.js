@@ -5,23 +5,6 @@ const artCollection = []
 window.addEventListener('DOMContentLoaded', () => {
     getInitialIDs()
 
-    // cardBuilder()
-        // Builds card with basic info
-            // Small Img + Name + other?
-            // Include like + dislike button w unique IDs
-        // has event listeners for
-        // artInfo():
-            // Click on small Img to pull up window with more information from API
-            // Name + Author + Yr + Department + Addl imgs
-        // artLiker():
-            // takes card information and sends to
-            // likeCollector():
-                // displays currently liked art somewhere on page (just Small Imgs)
-                // also has button to dislike art
-                // when has 6 + 
-        // artDisliker():
-            // closes current card (parent LI gets deleted)
-            // builds new card (and replace or add to end?? [probs append to ul])
 })
 
 function getInitialIDs(){
@@ -39,7 +22,6 @@ function getInitialIDs(){
 
 function makeCards(idList){
     for (let i = 0; i < 5; i++){
-        //console.log(idList[i])
         let randIndex = Math.floor(Math.random() * (idList.length))
         fetch(BASE_URL + `/objects/${idList[randIndex]}`)
         .then(function (resp){
@@ -51,12 +33,6 @@ function makeCards(idList){
             }
         })
     }
-
-    // const artDiv = document.getElementById('artCollection')
-    // const refreshButton = document.createElement('button')
-    // refreshButton.className = ('refreshButton')
-    // refreshButton.innerText = ('CLICK ME')
-    // artDiv.appendChild(refreshButton)
 }
 
 
@@ -104,9 +80,7 @@ function cardMaker(data) {
 
 function liker(event){
     event.preventDefault()
-
     const artid = event.target.id
-
     for (const art in artCollection) {
         if (artCollection[art]['objectID'] == artid) {
             console.log(artCollection[art]['title'])
@@ -121,23 +95,34 @@ function liker(event){
 }
 
 function dispMoreInfo(artid){
+    const introText = document.getElementById('introTxt')
+    introText.innerText = ''
+
     for (const art in artCollection) {
         if (artCollection[art]['objectID'] == artid) {
-            console.log(artCollection[art]['title'])
-            console.log(artCollection[art]['department'])
-            console.log(artCollection[art]['GalleryNumber'])
-            console.log(artCollection[art]['primaryImage'])
-            console.log(artCollection[art]['artistDisplayName'])
-            console.log(artCollection[art]['dimensions'])
-            console.log(artCollection[art]['objectDate'])
+            introText.innerHTML = `
+            Title:<br>${artCollection[art]['title']}<br><br>
+            Department:<br>${artCollection[art]['department']}<br><br>
+            Gallery #:<br>${artCollection[art]['GalleryNumber']}<br><br>
+            Artist:<br>${artCollection[art]['artistDisplayName']}<br><br>
+            Dimensions:<br>${artCollection[art]['dimensions']}<br><br>
+            Object Date:<br>${artCollection[art]['objectDate']}<br><br>`
+
+            // console.log(artCollection[art]['title'])
+            // console.log(artCollection[art]['department'])
+            // console.log(artCollection[art]['GalleryNumber'])
+            // console.log(artCollection[art]['primaryImage'])
+            // console.log(artCollection[art]['artistDisplayName'])
+            // console.log(artCollection[art]['dimensions'])
+            // console.log(artCollection[art]['objectDate'])
         }
     }
 }
 
 function cardCloser(artid){
     const dislikedCard = document.getElementById(`${artid}card`)
+    const introText = document.getElementById('introTxt')
 
+    introText.innerText = ''
     dislikedCard.remove()
 }
-
-//newCard.id = (`${data['objectID']}card`)

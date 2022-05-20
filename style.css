@@ -37,7 +37,7 @@ body {
   }
 
   #introPlusTable {
-    height: 90vh;
+    height: 85vh;
     overflow-y: scroll;
   }
   #introPlusTable::-webkit-scrollbar {
@@ -112,8 +112,8 @@ body {
     opacity: .8;
   }
 
-  p{
-    padding: 2rem;
+  #introPlusTable{
+    padding-left:2rem;
     font-size: 18px;
     color: #fff;
   }
@@ -121,7 +121,6 @@ body {
   h1{
     margin: 0;
     padding-top: 1rem;
-    padding-left: 2rem;
     font-size: 32px;
     color: #fff;
   }
@@ -133,3 +132,32 @@ body {
     font-size: 20px;
     color: rgb(0, 0, 0);
   }
+
+  #footer{
+    height: 15vh;
+    padding: 0;
+    padding-left: 2rem;
+    font-size: 18px;
+    color: #fff;
+  }
+
+  table{
+    height: min-content;
+
+    font-size: 18px;
+    color: #fff;
+    border: 1px solid;
+  }
+  th,td{
+    border: 1px solid;
+  }
+
+  #loadNewCards {
+    background-color: whitesmoke;
+    border: none;
+    border-radius: 5px;
+    height: 2rem;
+    width: max-content;
+    font-size: 16px;
+  }
+  
