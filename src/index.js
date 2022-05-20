@@ -1,27 +1,27 @@
 const BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1'
+const CALLCOUNT = 20
 
 const artCollection = []
+let tableLen = 0
 
 window.addEventListener('DOMContentLoaded', () => {
     getInitialIDs()
-
 })
 
 function getInitialIDs(){
-    fetch(BASE_URL + '/search?isHighlight=true&isOnView=true|q=a')
+    fetch(BASE_URL + '/search?isHighlight=true&isOnView=true|q=*')
         .then(function (resp){
             return resp.json()
         })
         .then (data => {
-            const idList = Object.values(data.objectIDs)
+            let idList = Object.values(data.objectIDs)
             makeCards(idList)
-        }).catch(function(error) {
-            console.log(error);
         })
 }
 
 function makeCards(idList){
-    for (let i = 0; i < 5; i++){
+    //const footerText = getElementById('footerText')
+    for(let i = 0; i < CALLCOUNT; i++){
         let randIndex = Math.floor(Math.random() * (idList.length))
         fetch(BASE_URL + `/objects/${idList[randIndex]}`)
         .then(function (resp){
@@ -29,14 +29,13 @@ function makeCards(idList){
         })
         .then (data => {
             if(data['primaryImageSmall'] != "" && data['GalleryNumber'] != ""){
-                cardMaker(data)
+                cardHTMLer(data)
             }
         })
     }
 }
 
-
-function cardMaker(data) {
+function cardHTMLer(data) {
     artCollection.push(data)
 
     const artDiv = document.getElementById('artCollection')
@@ -75,28 +74,29 @@ function cardMaker(data) {
     newCard.append(newH2, newImg, newBtnDiv)
     
     artDiv.appendChild(newCard)
-
 }
 
 function liker(event){
     event.preventDefault()
+    const topText = document.getElementById('introTxt')
+    topText.innerText = 'Below is a summary of the works that you have liked! You can also click on the images in the table to open objects page on the MET website.'
     const artid = event.target.id
-    for (const art in artCollection) {
-        if (artCollection[art]['objectID'] == artid) {
-            console.log(artCollection[art]['title'])
-            console.log(artCollection[art]['department'])
-            console.log(artCollection[art]['GalleryNumber'])
-            console.log(artCollection[art]['primaryImage'])
-            console.log(artCollection[art]['artistDisplayName'])
-            console.log(artCollection[art]['dimensions'])
-            console.log(artCollection[art]['objectDate'])
-        }
-    }
+    
+    tabler(artid)
+    cardCloser(artid)
 }
 
 function dispMoreInfo(artid){
     const introText = document.getElementById('introTxt')
     introText.innerText = ''
+    
+    const cardGroup = document.getElementsByClassName('card')
+    for (card of cardGroup){
+        card.style.background = "#e4e4e4"
+    }
+
+    const indivCard = document.getElementById(`${artid}card`)
+    indivCard.style.background = "#bbbbbb"
 
     for (const art in artCollection) {
         if (artCollection[art]['objectID'] == artid) {
@@ -107,22 +107,33 @@ function dispMoreInfo(artid){
             Artist:<br>${artCollection[art]['artistDisplayName']}<br><br>
             Dimensions:<br>${artCollection[art]['dimensions']}<br><br>
             Object Date:<br>${artCollection[art]['objectDate']}<br><br>`
-
-            // console.log(artCollection[art]['title'])
-            // console.log(artCollection[art]['department'])
-            // console.log(artCollection[art]['GalleryNumber'])
-            // console.log(artCollection[art]['primaryImage'])
-            // console.log(artCollection[art]['artistDisplayName'])
-            // console.log(artCollection[art]['dimensions'])
-            // console.log(artCollection[art]['objectDate'])
         }
     }
 }
 
 function cardCloser(artid){
     const dislikedCard = document.getElementById(`${artid}card`)
-    const introText = document.getElementById('introTxt')
-
-    introText.innerText = ''
     dislikedCard.remove()
+}
+
+function tabler(artid){
+    const tableDiv = document.getElementById('tableDiv')
+    
+    if (tableLen == 0){
+        tableDiv.innerHTML = (`<table id='table'><tr><th>Image</td><th>Info</td></tr></table>`)
+        tableLen++
+    }
+
+    const artTable = document.getElementById('table')
+
+    for (const art in artCollection) {
+        if (artCollection[art]['objectID'] == artid) {
+            const newRow = document.createElement('tr')
+            newRow.innerHTML = (`
+            <td><a href="https://www.metmuseum.org/art/collection/search/${artid}" target="_blank"><img class="tableImage" src="${artCollection[art]['primaryImageSmall']}" alt="${artCollection[art]['title']}"></a></td><td>Title: ${artCollection[art]['title']}
+            <br><br>
+            Gallery: ${artCollection[art]['GalleryNumber']}</td>`)
+            artTable.appendChild(newRow)
+        }
+    }
 }

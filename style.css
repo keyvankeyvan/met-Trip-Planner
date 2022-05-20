@@ -61,7 +61,7 @@ body {
     box-shadow: 4px 4px #746f6f
   }
   
-  .artImgSmall {
+  .artImgSmall, .tableImage{
     justify-self: center;
     max-height: 12rem;
     max-width: 14rem;
@@ -143,7 +143,6 @@ body {
 
   table{
     height: min-content;
-
     font-size: 18px;
     color: #fff;
     border: 1px solid;
