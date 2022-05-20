@@ -2,6 +2,7 @@ body {
     margin: 0;
     font-family:monospace;
     background-color: #e4e4e4;
+    overflow: hidden; /* Hide scrollbars */
   }
 
   #header {
@@ -27,14 +28,26 @@ body {
   #artCollection {
     margin: 0;
     width: 60%;
+    height: 100vh;
     float:left;
-    border: grey solid 1px;
+    overflow-y: scroll;
+  }
+  #artCollection::-webkit-scrollbar {
+    display: none;
   }
 
-  #leftSidebar {
+  #introPlusTable {
+    height: 90vh;
+    overflow-y: scroll;
+  }
+  #introPlusTable::-webkit-scrollbar {
+    display: none;
+  }
+
+  #rightSidebar {
     margin: 0;
     width: 40%;
-    border: grey solid 1px;
+    height: 100vh;
     background: #e4002b;
   }
   
@@ -50,8 +63,8 @@ body {
   
   .artImgSmall {
     justify-self: center;
-    max-height: 10rem;
-    max-width: 13rem;
+    max-height: 12rem;
+    max-width: 14rem;
   }
   
   .bttns{
@@ -100,7 +113,23 @@ body {
   }
 
   p{
-      padding: 2rem;
-      font-size: 18px;
-      color: #fff;
+    padding: 2rem;
+    font-size: 18px;
+    color: #fff;
+  }
+
+  h1{
+    margin: 0;
+    padding-top: 1rem;
+    padding-left: 2rem;
+    font-size: 32px;
+    color: #fff;
+  }
+  
+  h2{
+    height:min-content;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    font-size: 20px;
+    color: rgb(0, 0, 0);
   }

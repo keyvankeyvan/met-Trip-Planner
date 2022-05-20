@@ -38,7 +38,7 @@ function getInitialIDs(){
 }
 
 function makeCards(idList){
-    for (let i = 0; i < 20; i++){
+    for (let i = 0; i < 5; i++){
         //console.log(idList[i])
         let randIndex = Math.floor(Math.random() * (idList.length))
         fetch(BASE_URL + `/objects/${idList[randIndex]}`)
@@ -51,6 +51,12 @@ function makeCards(idList){
             }
         })
     }
+
+    // const artDiv = document.getElementById('artCollection')
+    // const refreshButton = document.createElement('button')
+    // refreshButton.className = ('refreshButton')
+    // refreshButton.innerText = ('CLICK ME')
+    // artDiv.appendChild(refreshButton)
 }
 
 
@@ -60,10 +66,11 @@ function cardMaker(data) {
     const artDiv = document.getElementById('artCollection')
     const newCard = document.createElement('div')
     newCard.className = ('card')
+    newCard.id = (`${data['objectID']}card`)
 
     const newH2 = document.createElement('h2')
     if(data['title'].length > 20){
-        newH2.innerText = `${data['title'].slice(0,20)}...`
+        newH2.innerText = `${data['title'].slice(0,18)}...`
     } else {
         newH2.innerText = `${data['title']}`
     }
@@ -86,12 +93,13 @@ function cardMaker(data) {
     newDislikeBtn.className = "dislike-btn"
     newDislikeBtn.id = `${data['title']}dislike`
     newDislikeBtn.innerText = '❌'
-    newDislikeBtn.addEventListener('click', (e) => disliker(e))
+    newDislikeBtn.addEventListener('click', (e) => cardCloser(data['objectID']))
 
     newBtnDiv.append(newLikeBtn, newDislikeBtn)
     newCard.append(newH2, newImg, newBtnDiv)
     
     artDiv.appendChild(newCard)
+
 }
 
 function liker(event){
@@ -126,6 +134,10 @@ function dispMoreInfo(artid){
     }
 }
 
-function disliker(event){
-    console.log('we got here!!')
+function cardCloser(artid){
+    const dislikedCard = document.getElementById(`${artid}card`)
+
+    dislikedCard.remove()
 }
+
+//newCard.id = (`${data['objectID']}card`)
