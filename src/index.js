@@ -1,5 +1,5 @@
 const BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1'
-const CALLCOUNT = 20
+const CALLCOUNT = 30
 
 const artCollection = []
 let tableLen = 0
@@ -41,6 +41,7 @@ function makeCards(idList) {
 
 function cardHTMLer(data) {
     artCollection.push(data)
+    console.log(artCollection)
 
     const artDiv = document.getElementById('artCollection')
     const newCard = document.createElement('div')
@@ -163,6 +164,9 @@ function clearTableInit() {
     const clearTable = document.getElementById('clearTable')
     const tableDiv = document.getElementById('tableDiv')
     clearTable.addEventListener('click', (e) => {
-        tableDiv.innerHTML = (`<table id='table'><tr><th>Image</td><th>Info</td></tr></table>`)
+        // tableDiv.innerHTML = (`<table id='table'><tr><th>Image</td><th>Info</td></tr></table>`)
+        tableDiv.innerHTML = (``)
+        tableLen = 0
+        //console.log(tableLen)
     })
 }
