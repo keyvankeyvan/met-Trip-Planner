@@ -5,7 +5,7 @@ const artCollection = []
 let tableLen = 0
 
 window.addEventListener('DOMContentLoaded', () => {
-    getInitialIDs()
+    getInitialIDs()    
 })
 
 function getInitialIDs(){
@@ -16,11 +16,13 @@ function getInitialIDs(){
         .then (data => {
             let idList = Object.values(data.objectIDs)
             makeCards(idList)
+            const loadMore = document.getElementById('loadNewCards')
+            loadMore.addEventListener('click', (e) => makeCards(idList))
         })
 }
 
 function makeCards(idList){
-    //const footerText = getElementById('footerText')
+
     for(let i = 0; i < CALLCOUNT; i++){
         let randIndex = Math.floor(Math.random() * (idList.length))
         fetch(BASE_URL + `/objects/${idList[randIndex]}`)
@@ -78,6 +80,10 @@ function cardHTMLer(data) {
 
 function liker(event){
     event.preventDefault()
+    const cardGroup = document.getElementsByClassName('card')
+    for (card of cardGroup){
+        card.style.background = "#e4e4e4"
+    }
     const topText = document.getElementById('introTxt')
     topText.innerText = 'Below is a summary of the works that you have liked! You can also click on the images in the table to open objects page on the MET website.'
     const artid = event.target.id
@@ -129,10 +135,17 @@ function tabler(artid){
     for (const art in artCollection) {
         if (artCollection[art]['objectID'] == artid) {
             const newRow = document.createElement('tr')
-            newRow.innerHTML = (`
+            if (artCollection[art]['department'] == "The Cloisters") {
+                newRow.innerHTML = (`
+            <td><a href="https://www.metmuseum.org/art/collection/search/${artid}" target="_blank"><img class="tableImage" src="${artCollection[art]['primaryImageSmall']}" alt="${artCollection[art]['title']}"></a></td><td>Title: ${artCollection[art]['title']}
+            <br><br>
+            Gallery: ${artCollection[art]['GalleryNumber']}<br>NOTE: This item is located the the MET Cloisters, a ~40 minute trip on public transit.</td>`)
+            } else {
+                newRow.innerHTML = (`
             <td><a href="https://www.metmuseum.org/art/collection/search/${artid}" target="_blank"><img class="tableImage" src="${artCollection[art]['primaryImageSmall']}" alt="${artCollection[art]['title']}"></a></td><td>Title: ${artCollection[art]['title']}
             <br><br>
             Gallery: ${artCollection[art]['GalleryNumber']}</td>`)
+            }
             artTable.appendChild(newRow)
         }
     }
