@@ -11,10 +11,10 @@ https://keyvankeyvan.github.io/met-Trip-Planner/
 
 
 ## Features
-* Like pieces from the MET's collection to temporily store in a summary table.
-* View more information of loaded works to by clicking on the piece image.
+* Like pieces from the MET's collection to temporarily  store in a summary table.
+* View more information of loaded works by clicking on the piece image.
 * Open the work's page on the MET's website by clicking the image in the summary table.
-* Controls to load more art, clear additional displayed information, and clear table. 
+* Controls to load more art, clear additional displayed information, and clear summary table. 
 
 
 ## License
