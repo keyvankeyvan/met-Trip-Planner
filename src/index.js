@@ -33,6 +33,7 @@ function makeCards(idList) {
             })
             .then(data => {
                 if (data['primaryImageSmall'] != "" && data['GalleryNumber'] != "") {
+                    artCollection.push(data)
                     cardHTMLer(data)
                 }
             })
@@ -40,7 +41,7 @@ function makeCards(idList) {
 }
 
 function cardHTMLer(data) {
-    artCollection.push(data)
+    
     console.log(artCollection)
 
     const artDiv = document.getElementById('artCollection')
