@@ -1,5 +1,5 @@
 const BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1'
-const CALLCOUNT = 20
+const CALLCOUNT = 30
 
 const artCollection = []
 let tableEmpty = false
