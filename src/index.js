@@ -1,8 +1,8 @@
 const BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1'
-const CALLCOUNT = 30
+const CALLCOUNT = 20
 
 const artCollection = []
-let tableLen = 0
+let tableEmpty = false
 
 window.addEventListener('DOMContentLoaded', () => {
     getInitialIDs()
@@ -41,9 +41,6 @@ function makeCards(idList) {
 }
 
 function cardHTMLer(data) {
-    
-    console.log(artCollection)
-
     const artDiv = document.getElementById('artCollection')
     const newCard = document.createElement('div')
     newCard.className = ('card')
@@ -59,7 +56,7 @@ function cardHTMLer(data) {
     const newImg = document.createElement('img')
     newImg.src = `${data['primaryImageSmall']}`
     newImg.className = "artImgSmall"
-    newImg.addEventListener('click', (e) => dispMoreInfo(data['objectID']))
+    newImg.addEventListener('click', () => dispMoreInfo(data['objectID']))
 
     const newBtnDiv = document.createElement('div')
     newBtnDiv.className = "bttns"
@@ -69,12 +66,24 @@ function cardHTMLer(data) {
     newLikeBtn.id = `${data['objectID']}`
     newLikeBtn.innerText = '✔️'
     newLikeBtn.addEventListener('click', (e) => liker(e))
+    newLikeBtn.addEventListener('mouseover', (e) => {
+        e.target.style.background = 'whitesmoke'
+    })
+    newLikeBtn.addEventListener('mouseout', (e) => {
+        e.target.style.background = '#cbf2c3'
+    })
 
     const newDislikeBtn = document.createElement('button')
     newDislikeBtn.className = "dislike-btn"
     newDislikeBtn.id = `${data['title']}dislike`
     newDislikeBtn.innerText = '❌'
-    newDislikeBtn.addEventListener('click', (e) => cardCloser(data['objectID']))
+    newDislikeBtn.addEventListener('click', () => cardCloser(data['objectID']))
+    newDislikeBtn.addEventListener('mouseover', (e) => {
+        e.target.style.background = 'whitesmoke'
+    })
+    newDislikeBtn.addEventListener('mouseout', (e) => {
+        e.target.style.background = '#f2c3c5'
+    })
 
     newBtnDiv.append(newLikeBtn, newDislikeBtn)
     newCard.append(newH2, newImg, newBtnDiv)
@@ -83,15 +92,12 @@ function cardHTMLer(data) {
 }
 
 function liker(event) {
-    event.preventDefault()
-    const cardGroup = document.getElementsByClassName('card')
-    for (card of cardGroup) {
-        card.style.background = "#e4e4e4"
-    }
+    cardColorReset()
+
     const topText = document.getElementById('introTxt')
     topText.innerText = 'Below is a summary of the works that you have liked! You can also click on the images in the table to open objects page on the MET website.'
-    const artid = event.target.id
 
+    const artid = event.target.id
     tabler(artid)
     cardCloser(artid)
 }
@@ -99,26 +105,19 @@ function liker(event) {
 function dispMoreInfo(artid) {
     const introText = document.getElementById('introTxt')
     introText.innerText = ''
-
-    const cardGroup = document.getElementsByClassName('card')
-    for (card of cardGroup) {
-        card.style.background = "#e4e4e4"
-    }
+    cardColorReset()
 
     const indivCard = document.getElementById(`${artid}card`)
     indivCard.style.background = "#bbbbbb"
+    const selectedArt = artCollection.find(art => art['objectID'] == artid)
 
-    for (const art in artCollection) {
-        if (artCollection[art]['objectID'] == artid) {
-            introText.innerHTML = `
-            Title:<br>${artCollection[art]['title']}<br><br>
-            Department:<br>${artCollection[art]['department']}<br><br>
-            Gallery #:<br>${artCollection[art]['GalleryNumber']}<br><br>
-            Artist:<br>${artCollection[art]['artistDisplayName']}<br><br>
-            Dimensions:<br>${artCollection[art]['dimensions']}<br><br>
-            Object Date:<br>${artCollection[art]['objectDate']}<br><br>`
-        }
-    }
+    introText.innerHTML = `
+    Title:<br>${selectedArt.title}<br><br>
+    Department:<br>${selectedArt.department}<br><br>
+    Gallery #:<br>${selectedArt.GalleryNumber}<br><br>
+    Artist:<br>${selectedArt.artistDisplayName}<br><br>
+    Dimensions:<br>${selectedArt.dimensions}<br><br>
+    Object Date:<br>${selectedArt.objectDate}<br><br>`
 }
 
 function cardCloser(artid) {
@@ -129,30 +128,29 @@ function cardCloser(artid) {
 function tabler(artid) {
     const tableDiv = document.getElementById('tableDiv')
 
-    if (tableLen == 0) {
+    if (tableEmpty == false) {
         tableDiv.innerHTML = (`<table id='table'><tr><th>Image</td><th>Info</td></tr></table>`)
-        tableLen++
+        tableEmpty = true
     }
 
     const artTable = document.getElementById('table')
 
-    for (const art in artCollection) {
-        if (artCollection[art]['objectID'] == artid) {
-            const newRow = document.createElement('tr')
-            if (artCollection[art]['department'] == "The Cloisters") {
-                newRow.innerHTML = (`
-            <td><a href="https://www.metmuseum.org/art/collection/search/${artid}" target="_blank"><img class="tableImage" src="${artCollection[art]['primaryImageSmall']}" alt="${artCollection[art]['title']}"></a></td><td>Title: ${artCollection[art]['title']}
-            <br><br>
-            Gallery: ${artCollection[art]['GalleryNumber']}<br>NOTE: This item is located the the MET Cloisters, a ~40 minute trip on public transit from the MET's Upper East Side Location.</td>`)
-            } else {
-                newRow.innerHTML = (`
-            <td><a href="https://www.metmuseum.org/art/collection/search/${artid}" target="_blank"><img class="tableImage" src="${artCollection[art]['primaryImageSmall']}" alt="${artCollection[art]['title']}"></a></td><td>Title: ${artCollection[art]['title']}
-            <br><br>
-            Gallery: ${artCollection[art]['GalleryNumber']}</td>`)
-            }
-            artTable.appendChild(newRow)
-        }
+    const artForRow = artCollection.find(art => art['objectID'] == artid)
+    const newRow = document.createElement('tr')
+    const metImgUrl = `https://www.metmuseum.org/art/collection/search/${artid}`
+    
+    if (artForRow.department == "The Cloisters"){
+        newRow.innerHTML =(`
+        <td><a href=${metImgUrl} target="_blank"><img class="tableImage" src="${artForRow.primaryImageSmall}" alt="${artForRow.title}"></a></td><td>Title: ${artForRow.title}
+        <br><br>
+        Gallery: ${artForRow.GalleryNumber}<br>NOTE: This item is located the the MET Cloisters, a ~40 minute trip on public transit from the MET's Upper East Side Location.</td>`)
+    } else {
+        newRow.innerHTML = (`
+        <td><a href=${metImgUrl} target="_blank"><img class="tableImage" src="${artForRow.primaryImageSmall}" alt="${artForRow.title}"></a></td><td>Title: ${artForRow.title}
+        <br><br>
+        Gallery: ${artForRow.GalleryNumber}</td>`)
     }
+    artTable.appendChild(newRow)
 }
 
 function clearMoreInfoInit() {
@@ -165,9 +163,14 @@ function clearTableInit() {
     const clearTable = document.getElementById('clearTable')
     const tableDiv = document.getElementById('tableDiv')
     clearTable.addEventListener('click', (e) => {
-        // tableDiv.innerHTML = (`<table id='table'><tr><th>Image</td><th>Info</td></tr></table>`)
         tableDiv.innerHTML = (``)
-        tableLen = 0
-        //console.log(tableLen)
+        tableEmpty = false
     })
+}
+
+function cardColorReset() {
+    const cardGroup = document.querySelectorAll('.card')
+    cardGroup.forEach(element => {
+        element.style.background = "#e4e4e4"
+    });
 }

@@ -2,7 +2,7 @@ body {
     margin: 0;
     font-family:monospace;
     background-color: #e4e4e4;
-    overflow: hidden; /* Hide scrollbars */
+    overflow: hidden;
   }
 
   #header {
@@ -82,10 +82,6 @@ body {
     font-size: 18px;
     justify-self: auto;
   }
-  
-  .like-btn:hover {
-    background-color: whitesmoke;
-  }
 
   .dislike-btn {
     position: relative;
@@ -97,10 +93,6 @@ body {
     
     font-size: 18px;
     justify-self: auto;
-  }
-  
-  .dislike-btn:hover {
-    background-color: whitesmoke;
   }
   
   .container {
